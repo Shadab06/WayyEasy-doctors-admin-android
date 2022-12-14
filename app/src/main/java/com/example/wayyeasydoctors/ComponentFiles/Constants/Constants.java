@@ -1,6 +1,8 @@
 package com.example.wayyeasydoctors.ComponentFiles.Constants;
 
 public class Constants {
+    public static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
     //firebase
     public static final String FIREBASE_USERS_DB = "users";
     public static final String KEY_FCM_TOKEN = "fcm_token";
