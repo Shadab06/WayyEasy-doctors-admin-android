@@ -1,4 +1,4 @@
-package com.example.wayyeasydoctors;
+package com.wayyeasy.wayyeasydoctors;
 
 import org.junit.Test;
 

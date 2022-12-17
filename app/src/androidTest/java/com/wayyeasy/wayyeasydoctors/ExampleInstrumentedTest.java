@@ -1,4 +1,4 @@
-package com.example.wayyeasydoctors;
+package com.wayyeasy.wayyeasydoctors;
 
 import android.content.Context;
 

@@ -1,15 +1,15 @@
-package com.example.wayyeasydoctors.Activities;
+package com.wayyeasy.wayyeasydoctors.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.wayyeasydoctors.ComponentFiles.Constants.Constants;
-import com.example.wayyeasydoctors.ComponentFiles.SharedPreferenceManager;
-import com.example.wayyeasydoctors.databinding.ActivitySplashScreenBinding;
+import com.wayyeasy.wayyeasydoctors.ComponentFiles.Constants.Constants;
+import com.wayyeasy.wayyeasydoctors.ComponentFiles.SharedPreferenceManager;
+import com.wayyeasy.wayyeasydoctors.databinding.ActivitySplashScreenBinding;
 
-public class SplashScreen extends AppCompatActivity {
+public class SplashScreenActivity extends AppCompatActivity {
 
     ActivitySplashScreenBinding splashScreenBinding;
     SharedPreferenceManager preferenceManager;
@@ -48,7 +48,7 @@ public class SplashScreen extends AppCompatActivity {
                             @Override
                             public void onAnimationEnd(Animator animator) {
                                 if (preferenceManager.getBoolean(Constants.KEY_IS_DOCTOR_SIGNED_IN))
-                                    startActivity(new Intent(getApplicationContext(), Dashboard.class));
+                                    startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
                                 else startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             }
 

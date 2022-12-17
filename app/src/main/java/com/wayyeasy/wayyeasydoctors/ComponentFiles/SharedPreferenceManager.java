@@ -1,8 +1,8 @@
-package com.example.wayyeasydoctors.ComponentFiles;
+package com.wayyeasy.wayyeasydoctors.ComponentFiles;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.example.wayyeasydoctors.ComponentFiles.Constants.Constants;
+import com.wayyeasy.wayyeasydoctors.ComponentFiles.Constants.Constants;
 
 public class SharedPreferenceManager {
     private SharedPreferences sharedPreferences;

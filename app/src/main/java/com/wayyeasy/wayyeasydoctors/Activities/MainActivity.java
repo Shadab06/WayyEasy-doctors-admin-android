@@ -1,11 +1,10 @@
-package com.example.wayyeasydoctors.Activities;
+package com.wayyeasy.wayyeasydoctors.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-
-import com.example.wayyeasydoctors.Fragments.LoginFragment;
-import com.example.wayyeasydoctors.R;
-import com.example.wayyeasydoctors.databinding.ActivityMainBinding;
+import com.wayyeasy.wayyeasydoctors.Fragments.LoginFragment;
+import com.wayyeasy.wayyeasydoctors.R;
+import com.wayyeasy.wayyeasydoctors.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
