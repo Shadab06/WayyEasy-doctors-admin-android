@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,9 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.wayyeasy.wayyeasydoctors.ComponentFiles.ApiHandlers.ApiControllers;
 import com.wayyeasy.wayyeasydoctors.ComponentFiles.SharedPreferenceManager;
@@ -27,7 +23,6 @@ import com.wayyeasy.wayyeasydoctors.databinding.FragmentRegisterBinding;
 import com.wayyeasy.wayyeasydoctors.Activities.DashboardActivity;
 import com.wayyeasy.wayyeasydoctors.ComponentFiles.Constants.Constants;
 import java.util.HashMap;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -124,7 +119,7 @@ public class RegisterFragment extends Fragment {
             public void onResponse(Call<verify_response_model> call, Response<verify_response_model> response) {
                 verify_response_model data = response.body();
                 if (response.body().getMessage().equals("User created successfully")) {
-                    RegisterToFirebase(name, email, mobile, data.getResult().get_id());
+                    RegisterToFirebase(data);
                 } else if(data.getMessage().equals("User already exists")) {
                     dialog.showDialog(getActivity(), "Registration Failed", response.body().getMessage());
                     progressDialog.dismissDialog();
@@ -142,29 +137,36 @@ public class RegisterFragment extends Fragment {
         });
     }
 
-    private void RegisterToFirebase(String name, String email, String mobile, String mongoId) {
+    private void RegisterToFirebase(verify_response_model data) {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
 
         HashMap<String, String> map = new HashMap<>();
-        map.put(Constants.name, name);
-        map.put(Constants.email, email);
-        map.put(Constants.mobile, mobile);
-        map.put(Constants.mongoId, mongoId);
+        map.put(Constants.name, data.getResult().getName());
+        map.put(Constants.email, data.getResult().getEmail());
+        map.put(Constants.mobile, data.getResult().getMobile());
+        map.put(Constants.mongoId, data.getResult().get_id());
+        map.put(Constants.status, data.getResult().getStatus());
 
         database.collection(Constants.FIREBASE_DOCTORS_DB)
                 .add(map)
                 .addOnSuccessListener(documentReference -> {
                     progressDialog.dismissDialog();
                     preferenceManager.putBoolean(Constants.KEY_IS_DOCTOR_SIGNED_IN, true);
-                    preferenceManager.putString(Constants.name, name);
-                    preferenceManager.putString(Constants.email, email);
-                    preferenceManager.putString(Constants.mongoId, mongoId);
-                    preferenceManager.putString(Constants.mobile, mobile);
+                    preferenceManager.putString(Constants.name, data.getResult().getName());
+                    preferenceManager.putString(Constants.email, data.getResult().getEmail());
+                    preferenceManager.putString(Constants.mongoId, data.getResult().get_id());
+                    preferenceManager.putString(Constants.mobile, data.getResult().getMobile());
+                    preferenceManager.putString(Constants.status, data.getResult().getStatus());
+                    preferenceManager.putString(Constants.firebaseId, documentReference.getId());
+                    preferenceManager.putString(Constants.isFull, data.getResult().getIsFull());
 
                     Intent intent = new Intent(getActivity(), DashboardActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 })
-                .addOnFailureListener(e -> dialog.showDialog(getActivity(), "Error", e.getMessage().toString()));
+                .addOnFailureListener(e -> {
+                    progressDialog.dismissDialog();
+                    dialog.showDialog(getActivity(), "Error", e.getMessage().toString());
+                });
     }
 }

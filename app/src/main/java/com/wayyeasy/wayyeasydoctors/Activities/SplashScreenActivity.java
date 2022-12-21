@@ -1,6 +1,7 @@
 package com.wayyeasy.wayyeasydoctors.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
@@ -47,9 +48,13 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                             @Override
                             public void onAnimationEnd(Animator animator) {
-                                if (preferenceManager.getBoolean(Constants.KEY_IS_DOCTOR_SIGNED_IN))
+                                if (preferenceManager.getBoolean(Constants.KEY_IS_DOCTOR_SIGNED_IN)) {
                                     startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
-                                else startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                    finishAffinity();
+                                } else {
+                                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                    finishAffinity();
+                                }
                             }
 
                             @Override

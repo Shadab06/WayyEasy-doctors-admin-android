@@ -15,6 +15,7 @@
         app:cardCornerRadius="40dp">
 
         <ImageView
+            android:id="@+id/user_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/default_doctor"/>
@@ -29,6 +30,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/user_name"
             android:textSize="15sp"
             android:textStyle="bold"
             android:layout_width="wrap_content"
@@ -37,6 +39,7 @@
             android:textColor="@color/white"/>
 
         <TextView
+            android:id="@+id/user_speciality"
             android:textSize="13sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -55,6 +58,7 @@
                 android:src="@drawable/ic_star" />
 
             <TextView
+                android:id="@+id/user_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="4.5"
@@ -63,4 +67,10 @@
                 android:textColor="@color/white"/>
         </LinearLayout>
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_right_arrow"
+        android:layout_gravity="center_vertical" />
 </LinearLayout>
