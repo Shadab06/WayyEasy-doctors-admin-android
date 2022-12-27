@@ -29,7 +29,7 @@
 
                 <ImageView
                     android:id="@+id/user_profile"
-                    android:scaleType="centerCrop"
+                    android:scaleType="fitXY"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/default_doctor" />
@@ -67,6 +67,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="jamal@gmail.com"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/mobile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="1234567890"
             android:textColor="@color/black" />
 
         <LinearLayout
@@ -255,6 +263,7 @@
             android:visibility="gone" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/update_profile_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -265,5 +274,15 @@
             android:textAllCaps="false"
             android:textStyle="bold"
             android:onClick="sendDataForVerification" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pending profile message"
+            android:id="@+id/pending_msg"
+            android:textColor="@color/theme_color_orange"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            android:visibility="gone" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

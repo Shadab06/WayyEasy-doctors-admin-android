@@ -1,11 +1,16 @@
 package com.wayyeasy.wayyeasydoctors.ComponentFiles.ApiHandlers;
 
 import com.wayyeasy.wayyeasydoctors.Models.verify_response_model;
+import com.wayyeasy.wayyeasydoctors.Models.verify_response_model_sub;
+
 import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface ApiSet {
     /*
@@ -63,4 +68,8 @@ public interface ApiSet {
 
     @POST("/physicians/login")
     Call<verify_response_model> login(@Body HashMap<String, String> map);
+
+    @GET("/physicians/getPhysiciansById/{physicianId}")
+    Call<verify_response_model_sub> getPhysicianById(@Header("Authorization") String token,
+                                                     @Path("physicianId") String physicianId);
 }

@@ -1,11 +1,6 @@
 package com.wayyeasy.wayyeasydoctors.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,11 +10,9 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
-
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import com.github.dhaval2404.imagepicker.ImagePicker;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -33,7 +26,6 @@ import com.wayyeasy.wayyeasydoctors.CustomDialogs.ProgressDialog;
 import com.wayyeasy.wayyeasydoctors.CustomDialogs.ResponseDialog;
 import com.wayyeasy.wayyeasydoctors.R;
 import com.wayyeasy.wayyeasydoctors.databinding.ActivityProfileBinding;
-
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -47,7 +39,6 @@ public class ProfileActivity extends AppCompatActivity {
     SharedPreferenceManager preferenceManager;
     ResponseDialog dialog;
     ProgressDialog progressDialog;
-    private String status = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
         dialog = new ResponseDialog();
         progressDialog = new ProgressDialog(ProfileActivity.this);
 
-        if (preferenceManager.getBoolean(Constants.KEY_IS_DOCTOR_SIGNED_IN)) {
-            status = preferenceManager.getString(Constants.status);
-        }
+        updateProfileStatus();
 
         String[] specialitySelection = getResources().getStringArray(R.array.speciality);
 
@@ -81,7 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
                         ImagePicker.with(ProfileActivity.this)
                                 .crop()                    //Crop image(Optional), Check Customization for more option
-                                .compress(128)            //Final image size will be less than 1 MB(Optional)
+                                .compress(256)            //Final image size will be less than 1 MB(Optional)
                                 .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
                                 .start(UPLOAD_PROFILE_IMAGE);
                     }
@@ -200,17 +189,79 @@ public class ProfileActivity extends AppCompatActivity {
                     .document(preferenceManager.getString(Constants.firebaseId))
                     .update(userMap)
                     .addOnCompleteListener(task -> {
-                        preferenceManager.putBoolean(Constants.KEY_IS_DOCTOR_SIGNED_IN, true);
-                        preferenceManager.putString(Constants.status, "pending");
                         profileBinding.errorMsg.setVisibility(View.GONE);
                         progressDialog.dismissDialog();
-                        startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+                        preferenceManager.putBoolean(Constants.KEY_IS_DOCTOR_SIGNED_IN, true);
+                        preferenceManager.putString(Constants.status, "pending");
+                        preferenceManager.putString(Constants.image, profileImage);
+                        preferenceManager.putString(Constants.proofDocs, docImage);
+                        preferenceManager.putString(Constants.specialityType, speciality);
+                        preferenceManager.putString(Constants.qualifiation, qualification);
+                        preferenceManager.putString(Constants.price, price);
+                        preferenceManager.putString(Constants.address, address);
+                        preferenceManager.putString(Constants.description, desc);
+
+                        Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                     })
                     .addOnFailureListener(e -> {
-
+                        dialog.showDialog(ProfileActivity.this, "Error", e.getMessage().toString());
                     });
         } else {
             profileBinding.errorMsg.setText("All fields are mandatory.");
+        }
+    }
+
+    private void updateProfileStatus() {
+        if (preferenceManager.getBoolean(Constants.KEY_IS_DOCTOR_SIGNED_IN)) {
+            profileBinding.name.setText(preferenceManager.getString(Constants.name));
+            profileBinding.email.setText(preferenceManager.getString(Constants.email));
+            profileBinding.mobile.setText(preferenceManager.getString(Constants.mobile));
+
+            if (preferenceManager.getString(Constants.status).equals("pending")) {
+                profileBinding.status.setText("Pending");
+                profileBinding.status.setTextColor(getResources().getColor(R.color.light_orange));
+                profileBinding.specialityInput.setText(preferenceManager.getString(Constants.specialityType));
+                profileBinding.qualificationInput.setText(preferenceManager.getString(Constants.qualifiation));
+                profileBinding.priceInput.setText(preferenceManager.getString(Constants.price));
+                profileBinding.addressInput.setText(preferenceManager.getString(Constants.address));
+                profileBinding.descriptionInput.setText(preferenceManager.getString(Constants.description));
+                profileBinding.updateProfileBtn.setVisibility(View.GONE);
+                profileBinding.pendingMsg.setVisibility(View.VISIBLE);
+                profileBinding.pendingMsg.setText("Profile activation request has been sent.\nWe will update you within 1 day.");
+            }
+
+            if (preferenceManager.getString(Constants.status).equals("inActive")) {
+                profileBinding.status.setText("In Active");
+                profileBinding.status.setTextColor(getResources().getColor(R.color.red));
+            }
+
+            if (preferenceManager.getString(Constants.status).equals("active")) {
+                profileBinding.updateProfileBtn.setVisibility(View.GONE);
+                profileBinding.pendingMsg.setVisibility(View.GONE);
+                profileBinding.pendingMsg.setText("Profile has been successfully updated");
+                profileBinding.pendingMsg.setTextColor(getResources().getColor(R.color.theme_color));
+                profileBinding.status.setText("Active");
+                profileBinding.status.setTextColor(getResources().getColor(R.color.theme_color));
+                profileBinding.name.setText(preferenceManager.getString(Constants.name));
+                profileBinding.email.setText(preferenceManager.getString(Constants.email));
+                profileBinding.mobile.setText(preferenceManager.getString(Constants.mobile));
+                profileBinding.specialityInput.setText(preferenceManager.getString(Constants.specialityType));
+                profileBinding.qualificationInput.setText(preferenceManager.getString(Constants.qualifiation));
+                profileBinding.priceInput.setText(preferenceManager.getString(Constants.price));
+                profileBinding.addressInput.setText(preferenceManager.getString(Constants.address));
+                profileBinding.descriptionInput.setText(preferenceManager.getString(Constants.description));
+                profileBinding.proofImg.setText("Document approved");
+                profileBinding.proofImg.setTextColor(getResources().getColor(R.color.theme_color));
+
+                byte[] profileImageByte;
+                Bitmap profileImageBitmap;
+
+                profileImageByte = Base64.decode(preferenceManager.getString(Constants.image), Base64.DEFAULT);
+                profileImageBitmap = BitmapFactory.decodeByteArray(profileImageByte, 0, profileImageByte.length);
+                profileBinding.userProfile.setImageBitmap(profileImageBitmap);
+            }
         }
     }
 }

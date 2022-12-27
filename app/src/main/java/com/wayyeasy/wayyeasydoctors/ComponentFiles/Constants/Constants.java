@@ -2,6 +2,8 @@ package com.wayyeasy.wayyeasydoctors.ComponentFiles.Constants;
 
 public class Constants {
     public static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+
+    //doctor details MongoDB
     public static final String name = "name";
     public static final String email = "email";
     public static final String mobile = "mobile";
@@ -18,7 +20,9 @@ public class Constants {
     public static final String address = "address";
     public static final String price = "price";
     public static final String isFull = "isFull";
-
+    public static final String ratings = "ratings";
+    public static final String token = "token";
+    public static final String role = "role";
 
     //firebase
     public static final String FIREBASE_DOCTORS_DB = "doctors";

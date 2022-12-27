@@ -152,6 +152,7 @@ public class RegisterFragment extends Fragment {
                 .addOnSuccessListener(documentReference -> {
                     progressDialog.dismissDialog();
                     preferenceManager.putBoolean(Constants.KEY_IS_DOCTOR_SIGNED_IN, true);
+                    preferenceManager.putString(Constants.token, data.getToken());
                     preferenceManager.putString(Constants.name, data.getResult().getName());
                     preferenceManager.putString(Constants.email, data.getResult().getEmail());
                     preferenceManager.putString(Constants.mongoId, data.getResult().get_id());
