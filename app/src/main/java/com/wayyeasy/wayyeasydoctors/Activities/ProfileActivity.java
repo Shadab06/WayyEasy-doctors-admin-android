@@ -178,7 +178,7 @@ public class ProfileActivity extends AppCompatActivity {
             userMap.put(Constants.image, profileImage);
             userMap.put(Constants.proofDocs, docImage);
             userMap.put(Constants.specialityType, speciality);
-            userMap.put(Constants.qualifiation, qualification);
+            userMap.put(Constants.qualification, qualification);
             userMap.put(Constants.price, price);
             userMap.put(Constants.address, address);
             userMap.put(Constants.description, desc);
@@ -186,7 +186,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             FirebaseFirestore database = FirebaseFirestore.getInstance();
             database.collection(Constants.FIREBASE_DOCTORS_DB)
-                    .document(preferenceManager.getString(Constants.firebaseId))
+                    .document(preferenceManager.getString(Constants.KEY_FIREBASE_USER_ID))
                     .update(userMap)
                     .addOnCompleteListener(task -> {
                         profileBinding.errorMsg.setVisibility(View.GONE);
@@ -196,7 +196,7 @@ public class ProfileActivity extends AppCompatActivity {
                         preferenceManager.putString(Constants.image, profileImage);
                         preferenceManager.putString(Constants.proofDocs, docImage);
                         preferenceManager.putString(Constants.specialityType, speciality);
-                        preferenceManager.putString(Constants.qualifiation, qualification);
+                        preferenceManager.putString(Constants.qualification, qualification);
                         preferenceManager.putString(Constants.price, price);
                         preferenceManager.putString(Constants.address, address);
                         preferenceManager.putString(Constants.description, desc);
@@ -223,7 +223,7 @@ public class ProfileActivity extends AppCompatActivity {
                 profileBinding.status.setText("Pending");
                 profileBinding.status.setTextColor(getResources().getColor(R.color.light_orange));
                 profileBinding.specialityInput.setText(preferenceManager.getString(Constants.specialityType));
-                profileBinding.qualificationInput.setText(preferenceManager.getString(Constants.qualifiation));
+                profileBinding.qualificationInput.setText(preferenceManager.getString(Constants.qualification));
                 profileBinding.priceInput.setText(preferenceManager.getString(Constants.price));
                 profileBinding.addressInput.setText(preferenceManager.getString(Constants.address));
                 profileBinding.descriptionInput.setText(preferenceManager.getString(Constants.description));
@@ -248,7 +248,7 @@ public class ProfileActivity extends AppCompatActivity {
                 profileBinding.email.setText(preferenceManager.getString(Constants.email));
                 profileBinding.mobile.setText(preferenceManager.getString(Constants.mobile));
                 profileBinding.specialityInput.setText(preferenceManager.getString(Constants.specialityType));
-                profileBinding.qualificationInput.setText(preferenceManager.getString(Constants.qualifiation));
+                profileBinding.qualificationInput.setText(preferenceManager.getString(Constants.qualification));
                 profileBinding.priceInput.setText(preferenceManager.getString(Constants.price));
                 profileBinding.addressInput.setText(preferenceManager.getString(Constants.address));
                 profileBinding.descriptionInput.setText(preferenceManager.getString(Constants.description));

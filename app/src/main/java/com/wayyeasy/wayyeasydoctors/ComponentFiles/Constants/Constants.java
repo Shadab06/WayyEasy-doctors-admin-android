@@ -9,10 +9,9 @@ public class Constants {
     public static final String mobile = "mobile";
     public static final String password = "password";
     public static final String mongoId = "mongoId";
-    public static final String firebaseId = "firebaseId";
     public static final String status = "status";
     public static final String description = "description";
-    public static final String qualifiation = "qualifiation";
+    public static final String qualification = "qualification";
     public static final String specialityType = "specialityType";
     public static final String badge = "badge";
     public static final String image = "image";
@@ -27,7 +26,7 @@ public class Constants {
     //firebase
     public static final String FIREBASE_DOCTORS_DB = "doctors";
     public static final String KEY_FCM_TOKEN = "fcm_token";
-    public static final String KEY_FIREBASE_USER_ID = "firebase_id";
+    public static final String KEY_FIREBASE_USER_ID = "firebaseId";
 
     //mongodb
     public static final String KEY_AUTHENTICATED_NUMBER = "mobile";

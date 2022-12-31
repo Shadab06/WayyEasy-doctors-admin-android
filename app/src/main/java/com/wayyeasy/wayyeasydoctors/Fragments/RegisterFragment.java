@@ -158,7 +158,7 @@ public class RegisterFragment extends Fragment {
                     preferenceManager.putString(Constants.mongoId, data.getResult().get_id());
                     preferenceManager.putString(Constants.mobile, data.getResult().getMobile());
                     preferenceManager.putString(Constants.status, data.getResult().getStatus());
-                    preferenceManager.putString(Constants.firebaseId, documentReference.getId());
+                    preferenceManager.putString(Constants.KEY_FIREBASE_USER_ID, documentReference.getId());
                     preferenceManager.putString(Constants.isFull, data.getResult().getIsFull());
 
                     Intent intent = new Intent(getActivity(), DashboardActivity.class);

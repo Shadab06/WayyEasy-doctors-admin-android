@@ -1,14 +1,18 @@
 package com.wayyeasy.wayyeasydoctors.ComponentFiles.ApiHandlers;
 
+import com.wayyeasy.wayyeasydoctors.Models.RealtimeCalling.user_booked_response_model;
 import com.wayyeasy.wayyeasydoctors.Models.verify_response_model;
 import com.wayyeasy.wayyeasydoctors.Models.verify_response_model_sub;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.HeaderMap;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -72,4 +76,13 @@ public interface ApiSet {
     @GET("/physicians/getPhysiciansById/{physicianId}")
     Call<verify_response_model_sub> getPhysicianById(@Header("Authorization") String token,
                                                      @Path("physicianId") String physicianId);
+
+    @GET("/physicianBookedByUsers/getPhysiciansUsersById/{physicianId}")
+    Call<List<user_booked_response_model>> getPhysicianPaidUsers(@Header("Authorization") String token,
+                                                                 @Path("physicianId") String physicianId);
+
+    //realtime messaging
+    @POST("send")
+    Call<String> sendRemoteMessage(@HeaderMap Map<String, String> headers,
+                                   @Body String remoteBody);
 }

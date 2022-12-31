@@ -7,47 +7,57 @@
     android:layout_margin="15dp"
     android:padding="15dp">
 
-    <ImageView
-        android:id="@+id/dialog_image"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:src="@drawable/ic_error"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/dialog_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Response header"
-        android:textColor="@color/red"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/dialog_image"
-        app:layout_constraintTop_toTopOf="@+id/dialog_image" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="15dp">
+
+        <ImageView
+            android:id="@+id/dialog_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:src="@drawable/ic_error" />
+
+        <TextView
+            android:id="@+id/dialog_header"
+            android:layout_width="0dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:text="Response header"
+            android:textColor="@color/red"
+            android:textSize="16sp"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/dialog_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="Response message"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dialog_header" />
+        app:layout_constraintTop_toBottomOf="@id/header" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/dialog_btn_ok"
-            android:text="Ok"
-            app:layout_constraintTop_toBottomOf="@id/dialog_message"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/white"
-            android:textAllCaps="false"
-            android:background="@drawable/hollow_white_circular_background"
-            android:backgroundTint="@color/theme_color_orange"
-            app:layout_constraintEnd_toEndOf="parent" />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/dialog_btn_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/hollow_white_circular_background"
+        android:backgroundTint="@color/theme_color_orange"
+        android:text="Ok"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialog_message" />
 </androidx.constraintlayout.widget.ConstraintLayout>

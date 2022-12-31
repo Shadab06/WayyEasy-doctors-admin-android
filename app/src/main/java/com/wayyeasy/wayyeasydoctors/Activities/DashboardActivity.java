@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,21 +15,33 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.wayyeasy.wayyeasydoctors.Adapters.PaidUsersList;
 import com.wayyeasy.wayyeasydoctors.ComponentFiles.ApiHandlers.ApiControllers;
 import com.wayyeasy.wayyeasydoctors.ComponentFiles.Constants.Constants;
 import com.wayyeasy.wayyeasydoctors.ComponentFiles.SharedPreferenceManager;
 import com.wayyeasy.wayyeasydoctors.CustomDialogs.ProgressDialog;
 import com.wayyeasy.wayyeasydoctors.CustomDialogs.ResponseDialog;
+import com.wayyeasy.wayyeasydoctors.Listeners.UsersListener;
+import com.wayyeasy.wayyeasydoctors.Models.RealtimeCalling.user_booked_response_model;
 import com.wayyeasy.wayyeasydoctors.Models.verify_response_model_sub;
 import com.wayyeasy.wayyeasydoctors.R;
 import com.wayyeasy.wayyeasydoctors.databinding.ActivityDashboardBinding;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity implements UsersListener {
 
     public static final String TAG = "Dashboard";
 
@@ -42,6 +53,7 @@ public class DashboardActivity extends AppCompatActivity {
     SharedPreferenceManager preferenceManager;
     ProgressDialog progressDialog;
     ResponseDialog dialog;
+    PaidUsersList paidUsersList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +65,12 @@ public class DashboardActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(DashboardActivity.this);
         dialog = new ResponseDialog();
 
-        if (preferenceManager.getBoolean(Constants.KEY_IS_DOCTOR_SIGNED_IN))
-            if (preferenceManager.getString(Constants.status).equals("active"))
+        if (preferenceManager.getBoolean(Constants.KEY_IS_DOCTOR_SIGNED_IN)) {
+            if (preferenceManager.getString(Constants.status).equals("pending"))
                 fetchProfileIfActive();
+            if (preferenceManager.getString(Constants.status).equals("active"))
+                fetchUsersPaidForConsult();
+        }
 
         //Menu starts
         setSupportActionBar(dashboard.toolbar);
@@ -130,9 +145,16 @@ public class DashboardActivity extends AppCompatActivity {
                 if (isOnline) {
                     item.setIcon(R.drawable.offline);
                     dashboard.toolbar.setTitle("You are online now");
+
+                    FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            addFCMToken(task.getResult());
+                        }
+                    });
                 } else {
                     item.setIcon(R.drawable.online);
                     dashboard.toolbar.setTitle("Offline");
+                    removeFCMToken();
                 }
             } else {
                 Toast.makeText(this, "Profile is not active yet.", Toast.LENGTH_SHORT).show();
@@ -163,7 +185,7 @@ public class DashboardActivity extends AppCompatActivity {
                     preferenceManager.putString(Constants.isFull, data.getIsFull());
                     preferenceManager.putString(Constants.address, data.getAddress());
                     preferenceManager.putString(Constants.description, data.getDescription());
-                    preferenceManager.putString(Constants.qualifiation, data.getQualifiation());
+                    preferenceManager.putString(Constants.qualification, data.getQualifiation());
                     preferenceManager.putString(Constants.specialityType, data.getSpecialityType());
                     preferenceManager.putString(Constants.mobile, data.getMobile());
                     preferenceManager.putString(Constants.price, data.getPrice());
@@ -213,5 +235,73 @@ public class DashboardActivity extends AppCompatActivity {
                 dashboard.inActiveMsg.setVisibility(View.GONE);
             }
         }
+    }
+
+    private void addFCMToken(String token) {
+
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = database.collection(Constants.FIREBASE_DOCTORS_DB)
+                .document(preferenceManager.getString(Constants.KEY_FIREBASE_USER_ID));
+
+        documentReference.update(Constants.KEY_FCM_TOKEN, token)
+                .addOnSuccessListener(unused -> Toast.makeText(DashboardActivity.this, "Successful", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> dialog.showDialog(DashboardActivity.this, "Error", e.getMessage().toString()));
+    }
+
+    private void removeFCMToken() {
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        DocumentReference documentReference =
+                database.collection(Constants.FIREBASE_DOCTORS_DB).document(
+                        preferenceManager.getString(Constants.KEY_FIREBASE_USER_ID));
+
+        HashMap<String, Object> updatedData = new HashMap<>();
+        updatedData.put(Constants.KEY_FCM_TOKEN, FieldValue.delete());
+        documentReference.update(updatedData)
+                .addOnSuccessListener(unused -> Toast.makeText(getApplicationContext(), "Your are offline now", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(getApplicationContext(), "Failed to remove token", Toast.LENGTH_SHORT).show());
+    }
+
+    private void fetchUsersPaidForConsult() {
+        progressDialog.showDialog();
+        Call<List<user_booked_response_model>> call = ApiControllers.getInstance()
+                .getApi()
+                .getPhysicianPaidUsers("Bearer " + preferenceManager.getString(Constants.token), preferenceManager.getString(Constants.mongoId));
+
+        call.enqueue(new Callback<List<user_booked_response_model>>() {
+            @Override
+            public void onResponse(Call<List<user_booked_response_model>> call, Response<List<user_booked_response_model>> response) {
+                progressDialog.dismissDialog();
+                if (response != null && response.isSuccessful()) {
+                    dashboard.recyclerView.setLayoutManager(new LinearLayoutManager(DashboardActivity.this));
+                    List<user_booked_response_model> usersList = response.body();
+                    paidUsersList = new PaidUsersList(usersList, DashboardActivity.this);
+                    dashboard.recyclerView.setAdapter(paidUsersList);
+                } else {
+                    progressDialog.dismissDialog();
+                    dialog.showDialog(DashboardActivity.this, "Error: ", response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<user_booked_response_model>> call, Throwable t) {
+                dialog.showDialog(DashboardActivity.this, "Error: ", t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void initializeVideoMeet(user_booked_response_model user) {
+        if (user != null) {
+            Intent intent = new Intent(DashboardActivity.this, OutgoingInvitation.class);
+            intent.putExtra("user", user);
+            intent.putExtra("type", "video");
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void initializeAudioMeet(user_booked_response_model user) {
+        Intent intent = new Intent(DashboardActivity.this, OutgoingInvitation.class);
+        startActivity(intent);
     }
 }
