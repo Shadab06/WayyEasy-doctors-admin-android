@@ -19,14 +19,16 @@
         tools:replace="android:appComponentFactory"
         tools:targetApi="31">
         <activity
-            android:name=".OutgoingInvitation"
+            android:name=".Activities.OutgoingInvitation"
+            android:screenOrientation="portrait"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".IncomingInvitation"
+            android:name=".Activities.IncomingInvitation"
+            android:screenOrientation="portrait"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

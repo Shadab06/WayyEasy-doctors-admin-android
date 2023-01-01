@@ -1,9 +1,11 @@
 package com.wayyeasy.wayyeasydoctors.Firebase;
 
-import android.util.Log;
+import android.content.Intent;
 
 import androidx.annotation.NonNull;
 
+import com.wayyeasy.wayyeasydoctors.Activities.IncomingInvitation;
+import com.wayyeasy.wayyeasydoctors.ComponentFiles.Constants.Constants;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -13,15 +15,22 @@ public class MessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
-        Log.d(TAG, "FCM Token : " + token);
-        System.out.println("FCM Token : " + token);
     }
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
-        if (message.getNotification() != null) {
-            Log.d(TAG, "FCM Token : " + message.getNotification().getBody());
+
+        String type = message.getData().get(Constants.REMOTE_MSG_TYPE);
+        if (type != null) {
+            if (type.equals(Constants.REMOTE_MSG_INVITATION)) {
+                Intent intent = new Intent(getApplicationContext(), IncomingInvitation.class);
+                intent.putExtra(Constants.REMOTE_MESSAGE_MEETING_TYPE,
+                        message.getData().get(Constants.REMOTE_MESSAGE_MEETING_TYPE));
+                intent.putExtra(Constants.name, message.getData().get(Constants.name));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.wayyeasy.wayyeasydoctors.ComponentFiles.Constants;
 
+import java.util.HashMap;
+
 public class Constants {
     public static final String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
@@ -36,4 +38,23 @@ public class Constants {
     //shared preferences
     public static final String KEY_PREFERENCE_NAME_DOCTOR = "login_credentials";
     public static final String KEY_IS_DOCTOR_SIGNED_IN = "is_signed_in";
+
+    //remote messaging
+    public static final String REMOTE_MESSAGE_AUTHORIZATION = "Authorization";
+    public static final String REMOTE_MESSAGE_CONTENT_TYPE = "Content-Type";
+
+    public static final String REMOTE_MSG_TYPE = "type";
+    public static final String REMOTE_MSG_INVITATION = "invitation";
+    public static final String REMOTE_MESSAGE_MEETING_TYPE = "meetingType";
+    public static final String REMOTE_MESSAGE_INVITER_TOKEN = "inviter_token";
+    public static final String REMOTE_MESSAGE_DATA = "data";
+    public static final String REMOTE_MESSAGE_REGISTRATION_IDS = "registration_ids";
+
+    public static HashMap<String, String> getRemoteMessageHeaders() {
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put(Constants.REMOTE_MESSAGE_AUTHORIZATION,
+                "key-BBlQ8bF1scR0nsK5Q1yMnqEAZJRip4zmPPrDDtDd-vySaZ_h2Qsza9SXzQhB4csHqzU4rgxbgE13GydhEP-6Tto");
+        headers.put(Constants.REMOTE_MESSAGE_CONTENT_TYPE, "application/json");
+        return headers;
+    }
 }

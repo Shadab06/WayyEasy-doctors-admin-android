@@ -4,12 +4,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class user_booked_response_model implements Parcelable {
-    private String userId, consultation, name, age, amountPaid, profileImage, _id;
+    private String userId, consultation, name, age, amountPaid, profileImage, _id, token;
 
     public user_booked_response_model() {
     }
 
-    public user_booked_response_model(String userId, String consultation, String name, String age, String amountPaid, String profileImage, String _id) {
+    public user_booked_response_model(String userId, String consultation, String name, String age, String amountPaid, String profileImage, String _id, String token) {
         this.userId = userId;
         this.consultation = consultation;
         this.name = name;
@@ -17,6 +17,7 @@ public class user_booked_response_model implements Parcelable {
         this.amountPaid = amountPaid;
         this.profileImage = profileImage;
         this._id = _id;
+        this.token = token;
     }
 
     protected user_booked_response_model(Parcel in) {
@@ -27,6 +28,24 @@ public class user_booked_response_model implements Parcelable {
         amountPaid = in.readString();
         profileImage = in.readString();
         _id = in.readString();
+        token = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(userId);
+        dest.writeString(consultation);
+        dest.writeString(name);
+        dest.writeString(age);
+        dest.writeString(amountPaid);
+        dest.writeString(profileImage);
+        dest.writeString(_id);
+        dest.writeString(token);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<user_booked_response_model> CREATOR = new Creator<user_booked_response_model>() {
@@ -69,19 +88,7 @@ public class user_booked_response_model implements Parcelable {
         return _id;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(userId);
-        parcel.writeString(consultation);
-        parcel.writeString(name);
-        parcel.writeString(age);
-        parcel.writeString(amountPaid);
-        parcel.writeString(profileImage);
-        parcel.writeString(_id);
+    public String getToken() {
+        return token;
     }
 }
