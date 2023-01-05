@@ -1,12 +1,12 @@
 package com.wayyeasy.wayyeasydoctors.Models;
 
 public class verify_response_model_sub {
-    private String name, image, _id, role, mobile, email, isFull, status, badge, address, description, price, proofDocs, qualifiation, specialityType;
+    private String name, image, _id, role, mobile, email, isFull, status, badge, address, description, price, proofDocs, qualifiation, specialityType, fcmToken;
 
     public verify_response_model_sub() {
     }
 
-    public verify_response_model_sub(String name, String image, String _id, String role, String mobile, String email, String isFull, String status, String badge, String address, String description, String price, String proofDocs, String qualifiation, String specialityType) {
+    public verify_response_model_sub(String name, String image, String _id, String role, String mobile, String email, String isFull, String status, String badge, String address, String description, String price, String proofDocs, String qualifiation, String specialityType, String fcmToken) {
         this.name = name;
         this.image = image;
         this._id = _id;
@@ -22,6 +22,7 @@ public class verify_response_model_sub {
         this.proofDocs = proofDocs;
         this.qualifiation = qualifiation;
         this.specialityType = specialityType;
+        this.fcmToken = fcmToken;
     }
 
     public String getName() {
@@ -82,5 +83,9 @@ public class verify_response_model_sub {
 
     public String getSpecialityType() {
         return specialityType;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
     }
 }

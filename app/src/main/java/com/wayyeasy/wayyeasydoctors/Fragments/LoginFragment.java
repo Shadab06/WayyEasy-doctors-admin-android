@@ -1,5 +1,7 @@
 package com.wayyeasy.wayyeasydoctors.Fragments;
 
+import static com.wayyeasy.wayyeasydoctors.Activities.DashboardActivity.TAG;
+
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.wayyeasy.wayyeasydoctors.Activities.DashboardActivity;
@@ -90,6 +93,9 @@ public class LoginFragment extends Fragment {
             public void onResponse(Call<verify_response_model> call, Response<verify_response_model> response) {
                 verify_response_model data = response.body();
                 if (data.getMessage().equals("Login Successful")) {
+
+                    Log.d(TAG, "onResponse: "+data.getResult().getQualifiation());
+
                     AuthenticateToFirebase(data);
                 } else if(data.getMessage().equals("User not found")) {
                     dialog.showDialog(getActivity(), "Registration Failed", response.body().getMessage());
@@ -121,7 +127,13 @@ public class LoginFragment extends Fragment {
                         preferenceManager.putString(Constants.email, data.getResult().getEmail());
                         preferenceManager.putString(Constants.mongoId, data.getResult().get_id());
                         preferenceManager.putString(Constants.mobile, data.getResult().getMobile());
+                        preferenceManager.putString(Constants.qualification, data.getResult().getQualifiation());
+                        preferenceManager.putString(Constants.specialityType, data.getResult().getSpecialityType());
+                        preferenceManager.putString(Constants.description, data.getResult().getDescription());
+                        preferenceManager.putString(Constants.price, data.getResult().getPrice());
+                        preferenceManager.putString(Constants.image, data.getResult().getImage());
                         preferenceManager.putString(Constants.status, data.getResult().getStatus());
+                        preferenceManager.putString(Constants.KEY_FCM_TOKEN, data.getResult().getFcmToken());
                         preferenceManager.putString(Constants.KEY_FIREBASE_USER_ID, task.getResult().getDocuments().get(0).getId());
                         preferenceManager.putString(Constants.isFull, data.getResult().getIsFull());
 
@@ -158,7 +170,13 @@ public class LoginFragment extends Fragment {
                     preferenceManager.putString(Constants.email, data.getResult().getEmail());
                     preferenceManager.putString(Constants.mongoId, data.getResult().get_id());
                     preferenceManager.putString(Constants.mobile, data.getResult().getMobile());
+                    preferenceManager.putString(Constants.qualification, data.getResult().getQualifiation());
+                    preferenceManager.putString(Constants.specialityType, data.getResult().getSpecialityType());
+                    preferenceManager.putString(Constants.description, data.getResult().getDescription());
+                    preferenceManager.putString(Constants.price, data.getResult().getPrice());
+                    preferenceManager.putString(Constants.image, data.getResult().getImage());
                     preferenceManager.putString(Constants.status, data.getResult().getStatus());
+                    preferenceManager.putString(Constants.KEY_FCM_TOKEN, data.getResult().getFcmToken());
                     preferenceManager.putString(Constants.KEY_FIREBASE_USER_ID, documentReference.getId());
                     preferenceManager.putString(Constants.isFull, data.getResult().getIsFull());
 

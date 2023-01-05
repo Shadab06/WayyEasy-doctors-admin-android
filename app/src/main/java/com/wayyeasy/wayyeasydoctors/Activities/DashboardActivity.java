@@ -29,6 +29,7 @@ import com.wayyeasy.wayyeasydoctors.CustomDialogs.ProgressDialog;
 import com.wayyeasy.wayyeasydoctors.CustomDialogs.ResponseDialog;
 import com.wayyeasy.wayyeasydoctors.Listeners.UsersListener;
 import com.wayyeasy.wayyeasydoctors.Models.RealtimeCalling.user_booked_response_model;
+import com.wayyeasy.wayyeasydoctors.Models.verify_response_model;
 import com.wayyeasy.wayyeasydoctors.Models.verify_response_model_sub;
 import com.wayyeasy.wayyeasydoctors.R;
 import com.wayyeasy.wayyeasydoctors.databinding.ActivityDashboardBinding;
@@ -154,7 +155,7 @@ public class DashboardActivity extends AppCompatActivity implements UsersListene
                 } else {
                     item.setIcon(R.drawable.online);
                     dashboard.toolbar.setTitle("Offline");
-                    removeFCMToken();
+//                    removeFCMToken();
                 }
             } else {
                 Toast.makeText(this, "Profile is not active yet.", Toast.LENGTH_SHORT).show();
@@ -239,13 +240,28 @@ public class DashboardActivity extends AppCompatActivity implements UsersListene
 
     private void addFCMToken(String token) {
 
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
-        DocumentReference documentReference = database.collection(Constants.FIREBASE_DOCTORS_DB)
-                .document(preferenceManager.getString(Constants.KEY_FIREBASE_USER_ID));
+        HashMap<String, String> map = new HashMap<>();
+        map.put(Constants.KEY_FCM_TOKEN, token);
+        progressDialog.showDialog();
+        Call<verify_response_model> call = ApiControllers.getInstance()
+                .getApi()
+                .addFirebaseFCMToken("Bearer " + preferenceManager.getString(Constants.token), preferenceManager.getString(Constants.mongoId), map);
 
-        documentReference.update(Constants.KEY_FCM_TOKEN, token)
-                .addOnSuccessListener(unused -> Toast.makeText(DashboardActivity.this, "Successful", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> dialog.showDialog(DashboardActivity.this, "Error", e.getMessage().toString()));
+        call.enqueue(new Callback<verify_response_model>() {
+            @Override
+            public void onResponse(Call<verify_response_model> call, Response<verify_response_model> response) {
+                progressDialog.dismissDialog();
+                if (response.isSuccessful() && response.body() != null) {
+                    Toast.makeText(DashboardActivity.this, "You are online now", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<verify_response_model> call, Throwable t) {
+                progressDialog.dismissDialog();
+                dialog.showDialog(DashboardActivity.this, "Error", t.getMessage());
+            }
+        });
     }
 
     private void removeFCMToken() {

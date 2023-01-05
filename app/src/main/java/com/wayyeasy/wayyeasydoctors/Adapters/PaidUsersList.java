@@ -40,13 +40,6 @@ public class PaidUsersList  extends RecyclerView.Adapter<PaidUsersList.holder>{
         holder.userName.setText(data.get(position).getName());
         holder.userAge.setText(data.get(position).getAge());
 
-        byte[] hospitalImageByte;
-        Bitmap hospitalImageBitmap;
-
-        hospitalImageByte = Base64.decode(data.get(position).getProfileImage(), Base64.DEFAULT);
-        hospitalImageBitmap = BitmapFactory.decodeByteArray(hospitalImageByte, 0, hospitalImageByte.length);
-        holder.userProfileImage.setImageBitmap(hospitalImageBitmap);
-
         holder.audioCall.setOnClickListener(view -> initializeAudioCall(data.get(position)));
         holder.videoCall.setOnClickListener(view -> initializeVideoCall(data.get(position)));
     }

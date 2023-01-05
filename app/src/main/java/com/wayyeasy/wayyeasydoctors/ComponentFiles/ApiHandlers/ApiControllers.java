@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiControllers {
 
-    public static final String url = "http://192.168.0.103:2001/";
+    public static final String url = "http://192.168.0.101:2001/";
     public static ApiControllers clientObject;
     public static Retrofit retrofit;
 

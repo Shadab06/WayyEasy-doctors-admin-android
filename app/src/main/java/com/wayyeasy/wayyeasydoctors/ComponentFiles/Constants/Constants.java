@@ -27,7 +27,7 @@ public class Constants {
 
     //firebase
     public static final String FIREBASE_DOCTORS_DB = "doctors";
-    public static final String KEY_FCM_TOKEN = "fcm_token";
+    public static final String KEY_FCM_TOKEN = "fcmToken";
     public static final String KEY_FIREBASE_USER_ID = "firebaseId";
 
     //mongodb
@@ -50,10 +50,16 @@ public class Constants {
     public static final String REMOTE_MESSAGE_DATA = "data";
     public static final String REMOTE_MESSAGE_REGISTRATION_IDS = "registration_ids";
 
+    public static final String REMOTE_MSG_INVITATION_RESPONSE = "invitationResponse";
+
+    public static final String REMOTE_MSG_INVITATION_ACCEPTED = "invitationAccepted";
+    public static final String REMOTE_MSG_INVITATION_REJECTED = "invitationRejected";
+    public static final String REMOTE_MSG_INVITATION_CANCELLED = "invitationCancelled";
+
     public static HashMap<String, String> getRemoteMessageHeaders() {
         HashMap<String, String> headers = new HashMap<>();
         headers.put(Constants.REMOTE_MESSAGE_AUTHORIZATION,
-                "key-BBlQ8bF1scR0nsK5Q1yMnqEAZJRip4zmPPrDDtDd-vySaZ_h2Qsza9SXzQhB4csHqzU4rgxbgE13GydhEP-6Tto");
+                "key=AAAAwZdntJM:APA91bHb7P0Peao9GAB7rT-qxrEgn8dZITtiDiAFO-n8S9pFN1xWd5qWX_wkJpSBUQwxi14PR4UzHBNdqGjkNszy4b4MsvNHrko1b2xmG72oWMur5cw1om7pI4dCT_Hdu1tT059qFKPZ");
         headers.put(Constants.REMOTE_MESSAGE_CONTENT_TYPE, "application/json");
         return headers;
     }

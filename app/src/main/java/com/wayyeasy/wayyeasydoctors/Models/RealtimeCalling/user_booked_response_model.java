@@ -4,20 +4,19 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class user_booked_response_model implements Parcelable {
-    private String userId, consultation, name, age, amountPaid, profileImage, _id, token;
+    private String userId, consultation, name, age, amountPaid, profileImage, fcmToken;
 
     public user_booked_response_model() {
     }
 
-    public user_booked_response_model(String userId, String consultation, String name, String age, String amountPaid, String profileImage, String _id, String token) {
+    public user_booked_response_model(String userId, String consultation, String name, String age, String amountPaid, String profileImage, String fcmToken) {
         this.userId = userId;
         this.consultation = consultation;
         this.name = name;
         this.age = age;
         this.amountPaid = amountPaid;
         this.profileImage = profileImage;
-        this._id = _id;
-        this.token = token;
+        this.fcmToken = fcmToken;
     }
 
     protected user_booked_response_model(Parcel in) {
@@ -27,8 +26,7 @@ public class user_booked_response_model implements Parcelable {
         age = in.readString();
         amountPaid = in.readString();
         profileImage = in.readString();
-        _id = in.readString();
-        token = in.readString();
+        fcmToken = in.readString();
     }
 
     @Override
@@ -39,8 +37,7 @@ public class user_booked_response_model implements Parcelable {
         dest.writeString(age);
         dest.writeString(amountPaid);
         dest.writeString(profileImage);
-        dest.writeString(_id);
-        dest.writeString(token);
+        dest.writeString(fcmToken);
     }
 
     @Override
@@ -84,11 +81,7 @@ public class user_booked_response_model implements Parcelable {
         return profileImage;
     }
 
-    public String get_id() {
-        return _id;
-    }
-
-    public String getToken() {
-        return token;
+    public String getFcmToken() {
+        return fcmToken;
     }
 }
