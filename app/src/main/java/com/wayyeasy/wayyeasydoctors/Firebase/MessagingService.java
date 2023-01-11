@@ -1,6 +1,7 @@
 package com.wayyeasy.wayyeasydoctors.Firebase;
 
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -21,6 +22,7 @@ public class MessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
+        Log.d(TAG, "onMessageReceived doctor: " + message.getData().get(Constants.REMOTE_MSG_TYPE));
         String type = message.getData().get(Constants.REMOTE_MSG_TYPE);
         if (type != null) {
             if (type.equals(Constants.REMOTE_MSG_INVITATION)) {

@@ -3,14 +3,14 @@ package com.wayyeasy.wayyeasydoctors.ComponentFiles.ApiHandlers;
 import com.wayyeasy.wayyeasydoctors.Models.RealtimeCalling.user_booked_response_model;
 import com.wayyeasy.wayyeasydoctors.Models.verify_response_model;
 import com.wayyeasy.wayyeasydoctors.Models.verify_response_model_sub;
+
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.HeaderMap;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;

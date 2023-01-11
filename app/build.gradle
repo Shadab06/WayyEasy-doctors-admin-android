@@ -50,6 +50,7 @@ dependencies {
 
     implementation 'com.karumi:dexter:6.2.3'
     implementation 'com.github.dhaval2404:imagepicker:2.1'
+    implementation 'com.google.gms:google-services:3.1.0'
 
 //  progress dialog
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'

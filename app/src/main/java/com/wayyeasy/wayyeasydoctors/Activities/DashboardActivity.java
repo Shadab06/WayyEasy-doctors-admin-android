@@ -5,21 +5,21 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.wayyeasy.wayyeasydoctors.Adapters.PaidUsersList;
 import com.wayyeasy.wayyeasydoctors.ComponentFiles.ApiHandlers.ApiControllers;
@@ -33,11 +33,8 @@ import com.wayyeasy.wayyeasydoctors.Models.verify_response_model;
 import com.wayyeasy.wayyeasydoctors.Models.verify_response_model_sub;
 import com.wayyeasy.wayyeasydoctors.R;
 import com.wayyeasy.wayyeasydoctors.databinding.ActivityDashboardBinding;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,10 +64,31 @@ public class DashboardActivity extends AppCompatActivity implements UsersListene
         dialog = new ResponseDialog();
 
         if (preferenceManager.getBoolean(Constants.KEY_IS_DOCTOR_SIGNED_IN)) {
-            if (preferenceManager.getString(Constants.status).equals("pending"))
-                fetchProfileIfActive();
+            if (preferenceManager.getString(Constants.status).equals("pending")) {
+                progressDialog.showDialog();
+
+                FirebaseFirestore database = FirebaseFirestore.getInstance();
+
+                database.collection(Constants.FIREBASE_DOCTORS_DB)
+                        .whereEqualTo(Constants.mongoId, preferenceManager.getString(Constants.mongoId))
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if (document.getString("status").equals("active")) {
+                                        fetchProfileIfActive();
+                                    }
+                                    progressDialog.dismissDialog();
+                                }
+                            } else {
+                                progressDialog.dismissDialog();
+                                dialog.showDialog(DashboardActivity.this, "Error", "We cannot fetch your data now but it will get updated in the time span.".toString());
+                            }
+                        });
+            }
             if (preferenceManager.getString(Constants.status).equals("active"))
                 fetchUsersPaidForConsult();
+
         }
 
         //Menu starts
@@ -168,7 +186,6 @@ public class DashboardActivity extends AppCompatActivity implements UsersListene
     }
 
     private void fetchProfileIfActive() {
-        progressDialog.showDialog();
         Call<verify_response_model_sub> call = ApiControllers.getInstance()
                 .getApi()
                 .getPhysicianById("Bearer " + preferenceManager.getString(Constants.token), preferenceManager.getString(Constants.mongoId));
@@ -199,6 +216,7 @@ public class DashboardActivity extends AppCompatActivity implements UsersListene
             @Override
             public void onFailure(Call<verify_response_model_sub> call, Throwable t) {
                 progressDialog.dismissDialog();
+                Log.d(TAG, "onFailure: 219 " + t.getMessage());
                 dialog.showDialog(DashboardActivity.this, "Error", t.getMessage().toString());
             }
         });
@@ -260,6 +278,7 @@ public class DashboardActivity extends AppCompatActivity implements UsersListene
             public void onFailure(Call<verify_response_model> call, Throwable t) {
                 progressDialog.dismissDialog();
                 dialog.showDialog(DashboardActivity.this, "Error", t.getMessage());
+                Log.d(TAG, "onFailure: 280 "+t.getMessage());
             }
         });
     }
@@ -287,7 +306,7 @@ public class DashboardActivity extends AppCompatActivity implements UsersListene
             @Override
             public void onResponse(Call<List<user_booked_response_model>> call, Response<List<user_booked_response_model>> response) {
                 progressDialog.dismissDialog();
-                if (response != null && response.isSuccessful()) {
+                if (response != null && response.isSuccessful() && response.body() != null && response.body().size() > 0) {
                     dashboard.recyclerView.setLayoutManager(new LinearLayoutManager(DashboardActivity.this));
                     List<user_booked_response_model> usersList = response.body();
                     paidUsersList = new PaidUsersList(usersList, DashboardActivity.this);
@@ -300,6 +319,8 @@ public class DashboardActivity extends AppCompatActivity implements UsersListene
 
             @Override
             public void onFailure(Call<List<user_booked_response_model>> call, Throwable t) {
+                progressDialog.dismissDialog();
+                Log.d(TAG, "onFailure: 322 "+t.getMessage());
                 dialog.showDialog(DashboardActivity.this, "Error: ", t.getMessage());
             }
         });

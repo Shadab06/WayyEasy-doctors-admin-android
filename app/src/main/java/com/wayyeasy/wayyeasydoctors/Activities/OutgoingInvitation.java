@@ -126,7 +126,8 @@ public class OutgoingInvitation extends AppCompatActivity {
                     public void onResponse(@NonNull Call<String> call, @NonNull Response<String> response) {
                         if (response != null && response.isSuccessful()) {
                             if (type.equals(Constants.REMOTE_MSG_INVITATION)) {
-                                Toast.makeText(OutgoingInvitation.this, "Invitation send successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), bookedUser.getFcmToken(), Toast.LENGTH_SHORT).show();
+//                                      Toast.makeText(OutgoingInvitation.this, "Invitation send successfully", Toast.LENGTH_SHORT).show();
                             } else if (type.equals(Constants.REMOTE_MSG_INVITATION_RESPONSE)){
                                 Toast.makeText(OutgoingInvitation.this, "Invitation Cancelled", Toast.LENGTH_SHORT).show();
                                 finish();

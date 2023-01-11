@@ -1,27 +1,30 @@
 package com.wayyeasy.wayyeasydoctors.Fragments;
 
+import static com.wayyeasy.wayyeasydoctors.Fragments.LoginFragment.TAG;
+
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.wayyeasy.wayyeasydoctors.Activities.DashboardActivity;
 import com.wayyeasy.wayyeasydoctors.ComponentFiles.ApiHandlers.ApiControllers;
+import com.wayyeasy.wayyeasydoctors.ComponentFiles.Constants.Constants;
 import com.wayyeasy.wayyeasydoctors.ComponentFiles.SharedPreferenceManager;
 import com.wayyeasy.wayyeasydoctors.CustomDialogs.ProgressDialog;
 import com.wayyeasy.wayyeasydoctors.CustomDialogs.ResponseDialog;
 import com.wayyeasy.wayyeasydoctors.Models.verify_response_model;
 import com.wayyeasy.wayyeasydoctors.R;
 import com.wayyeasy.wayyeasydoctors.databinding.FragmentRegisterBinding;
-import com.wayyeasy.wayyeasydoctors.Activities.DashboardActivity;
-import com.wayyeasy.wayyeasydoctors.ComponentFiles.Constants.Constants;
+
 import java.util.HashMap;
 
 import retrofit2.Call;

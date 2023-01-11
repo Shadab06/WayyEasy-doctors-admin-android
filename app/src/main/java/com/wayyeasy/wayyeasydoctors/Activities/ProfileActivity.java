@@ -183,6 +183,7 @@ public class ProfileActivity extends AppCompatActivity {
             userMap.put(Constants.address, address);
             userMap.put(Constants.description, desc);
             userMap.put(Constants.status, "pending");
+            userMap.put(Constants.KEY_FIREBASE_USER_ID, preferenceManager.getString(Constants.KEY_FIREBASE_USER_ID));
 
             FirebaseFirestore database = FirebaseFirestore.getInstance();
             database.collection(Constants.FIREBASE_DOCTORS_DB)
@@ -201,6 +202,8 @@ public class ProfileActivity extends AppCompatActivity {
                         preferenceManager.putString(Constants.address, address);
                         preferenceManager.putString(Constants.description, desc);
 
+
+
                         Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
@@ -218,6 +221,8 @@ public class ProfileActivity extends AppCompatActivity {
             profileBinding.name.setText(preferenceManager.getString(Constants.name));
             profileBinding.email.setText(preferenceManager.getString(Constants.email));
             profileBinding.mobile.setText(preferenceManager.getString(Constants.mobile));
+
+            Toast.makeText(this, preferenceManager.getString(Constants.status), Toast.LENGTH_SHORT).show();
 
             if (preferenceManager.getString(Constants.status).equals("pending")) {
                 profileBinding.status.setText("Pending");
